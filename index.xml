@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assets>
+    <asset>
+        <number>12345</number>
+        <name>Computer</name>
+        <state>New</state>
+        <cost>100000</cost>
+        <responsible_person>Ivan Ivanovich Ivanov</responsible_person>
+        <additional_information>Additional Information</additional_information>
+    </asset>
+    <asset>
+        <number>67890</number>
+        <name>Monitor</name>
+        <state>New</state>
+        <cost>50000</cost>
+        <responsible_person>Maria Sergeevna Petrova</responsible_person>
+        <additional_information>Additional Information</additional_information>
+    </asset>
+    <asset>
+        <number>34567</number>
+        <name>Printer</name>
+        <state>Used</state>
+        <cost>20000</cost>
+        <responsible_person>Sergei Petrovich Sidorov</responsible_person>
+        <additional_information>Additional Information</additional_information>
+    </asset>
+</assets>

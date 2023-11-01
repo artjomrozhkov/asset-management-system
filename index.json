@@ -1,0 +1,28 @@
+{
+    "asset": [
+        {
+            "number": "12345",
+            "name": "Computer",
+            "state": "New",
+            "cost": "100000",
+            "responsible_person": "Ivan Ivanovich Ivanov",
+            "additional_information": "Additional Information"
+        },
+        {
+            "number": "67890",
+            "name": "Monitor",
+            "state": "New",
+            "cost": "50000",
+            "responsible_person": "Maria Sergeevna Petrova",
+            "additional_information": "Additional Information"
+        },
+        {
+            "number": "34567",
+            "name": "Printer",
+            "state": "Used",
+            "cost": "20000",
+            "responsible_person": "Sergei Petrovich Sidorov",
+            "additional_information": "Additional Information"
+        }
+    ]
+}
