@@ -7,6 +7,9 @@ $xml->load('index.xml');
 $xsl = new DOMDocument;
 $xsl->load('index.xsl');
 
+$jsonFile = 'index.json';
+$jsonData = [];
+
 $stateFilter = isset($_GET['stateFilter']) ? $_GET['stateFilter'] : '';
 $personFilter = isset($_GET['personFilter']) ? $_GET['personFilter'] : '';
 
@@ -16,50 +19,41 @@ $proc->importStyleSheet($xsl);
 $proc->setParameter('', 'stateFilter', $stateFilter);
 $proc->setParameter('', 'personFilter', $personFilter);
 
-$xml = simplexml_load_file('index.xml');
-$json = json_encode($xml, JSON_PRETTY_PRINT);
-
-file_put_contents('index.json', $json);
-
 if (isset($_POST['lisa'])) {
-    // Validate the POST data
+    // Валидация данных из формы
     $requiredFields = ['number', 'name', 'state', 'cost', 'responsible_person', 'additional_information'];
+    $formData = [];
+
     foreach ($requiredFields as $field) {
         if (!isset($_POST[$field]) || empty($_POST[$field])) {
-            // Display an error message to the user
             echo 'Please fill in all of the required fields.';
             return;
         }
+
+        $formData[$field] = $_POST[$field];
     }
 
-    // Get the data from the POST array
-    $number = $_POST['number'];
-    $name = $_POST['name'];
-    $state = $_POST['state']; // Getting the selected state value
-    $cost = $_POST['cost'];
-    $responsiblePerson = $_POST['responsible_person'];
-    $additionalInformation = $_POST['additional_information'];
-
-    // Add the data to the XML document
+    // Добавление данных в XML-документ
     try {
-        $xml = simplexml_load_file('index.xml');
-        $newAsset = $xml->addChild('asset');
+        $xmlFile = new DOMDocument();
+        $xmlFile->load('index.xml');
 
-        $newAsset->addChild('number', $number);
-        $newAsset->addChild('name', $name);
-        $newAsset->addChild('state', $state);
-        $newAsset->addChild('cost', $cost);
-        $newAsset->addChild('responsible_person', $responsiblePerson);
-        $newAsset->addChild('additional_information', $additionalInformation);
+        $newAsset = $xmlFile->createElement('asset');
+        foreach ($formData as $key => $value) {
+            $newElement = $xmlFile->createElement($key, $value);
+            $newAsset->appendChild($newElement);
+        }
 
-        $xml->asXML('index.xml');
+        $xmlFile->documentElement->appendChild($newAsset);
+        $xmlFile->save('index.xml');
     } catch (Exception $e) {
-        // Display an error message to the user
+        // Вывод сообщения об ошибке
         echo 'An error occurred while adding the data to the XML document: ' . $e->getMessage();
     }
 
-    // Redirect the user back to the main page
+    // Перенаправление пользователя обратно на главную страницу
     header('Location: index.php');
+    exit();
 }
 
 if (isset($_POST['delete'])) {
@@ -67,16 +61,20 @@ if (isset($_POST['delete'])) {
 
     if ($rowIndex >= 0) {
         // Load the XML file
-        $xml = simplexml_load_file('index.xml');
+        $xmlFile = new DOMDocument();
+        $xmlFile->load('index.xml');
 
         // Remove the selected row from the XML
-        unset($xml->asset[$rowIndex]);
-
-        // Save the updated XML
-        $xml->asXML('index.xml');
+        $assets = $xmlFile->getElementsByTagName('asset');
+        if ($rowIndex < $assets->length) {
+            $removedAsset = $assets->item($rowIndex);
+            $xmlFile->documentElement->removeChild($removedAsset);
+            $xmlFile->save('index.xml');
+        }
     }
 }
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -89,9 +87,10 @@ if (isset($_POST['delete'])) {
 </head>
 <body>
 <nav class="navbar">
-    <a href="index.php" class="navbar-item">Index PHP</a>
+    <a href="index.php" class="navbar-item">Index XML</a>
     <a href="indexJSON.php" class="navbar-item">Index JSON</a>
 </nav>
+<h1>Index XML</h1>
 <form>
     <center>
         <label for="stateFilter">Filter by State:</label>

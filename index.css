@@ -2,6 +2,14 @@ body {
     font-family: Arial, sans-serif;
 }
 
+h1 {
+    font-size: 24px;
+    text-align: center;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+}
+
 form {
     margin: 20px 0;
 }
